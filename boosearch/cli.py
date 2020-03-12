@@ -1,5 +1,7 @@
 import click
 
+from boosearch.index import index_json
+
 
 @click.group()
 def main():
@@ -8,24 +10,43 @@ def main():
 
 @click.command()
 @click.option(
-    "--it", type=click.Choice(["json"]), default="json", help="Input data type"
+    "--data",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Input file name",
 )
 @click.option(
-    "--input", type=click.Path(exists=True), required=True, help="Input file name"
+    "--index", type=click.Path(), required=True, help="Output index file name"
 )
 @click.option(
-    "--output", type=click.Path(), required=True, help="Output index file name"
+    "--target_column",
+    type=click.INT,
+    default=3,
+    help="Index of the indexed column in the json file",
 )
-def index(it, input, output):
+@click.option(
+    "--buffer_size", type=click.INT, default=10000, help="Indexation buffer size"
+)
+def index(data, index, target_collumn, buffer_size):
     """Build search index"""
-
-    raise NotImplementedError
+    index_json(data, index, target_collumn, buffer_size)
 
 
 @click.command()
-@click.argument("index_file", type=click.Path(exists=True, file_okay=True))
+@click.option(
+    "--data",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Data file name",
+)
+@click.option(
+    "--index",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Index file name",
+)
 @click.argument("query", type=click.STRING)
-def search(index_file, query):
+def search(data, index, query):
     """Search documents"""
 
     raise NotImplementedError
