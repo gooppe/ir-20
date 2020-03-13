@@ -27,9 +27,9 @@ def main():
 @click.option(
     "--buffer_size", type=click.INT, default=10000, help="Indexation buffer size"
 )
-def index(data, index, target_collumn, buffer_size):
+def index(data, index, target_column, buffer_size):
     """Build search index"""
-    index_json(data, index, target_collumn, buffer_size)
+    index_json(data, index, target_column, buffer_size)
 
 
 @click.command()
