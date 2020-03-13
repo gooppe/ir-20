@@ -67,10 +67,11 @@ def load_stopwords(lang: str) -> Set[str]:
     Returns:
         Set[str]: set of stopwords.
     """
-    if not pkg_resources.is_resource(boosearch.resources.stopwords, lang):
+    lang_file = f"{lang}.txt"
+    if not pkg_resources.is_resource(boosearch.resources.stopwords, lang_file):
         raise ValueError(f"Stopwords list `{lang}` not founded")
 
-    raw_stopwords = pkg_resources.read_text(boosearch.resources.stopwords, lang)
+    raw_stopwords = pkg_resources.read_text(boosearch.resources.stopwords, lang_file)
     stopwords = set(word.lower().strip() for word in raw_stopwords.split("\n"))
 
     return stopwords
