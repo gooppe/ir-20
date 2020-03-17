@@ -39,9 +39,8 @@ def index_json(
 
 def batchify(data: Iterable, buffer_size: int) -> Generator:
     data_iter = iter(data)
-    while True:
-        batch_iter = islice(data_iter, buffer_size)
-        yield chain([next(batch_iter)], batch_iter)
+    for first in data_iter:
+        yield list(chain([first], islice(data_iter, buffer_size - 1)))
 
 
 def list_merge(lstlst: List[List[int]]) -> List[int]:

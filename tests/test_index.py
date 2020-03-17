@@ -1,6 +1,7 @@
 from boosearch import index
 import tempfile
 import os
+import ujson as json
 
 
 def test_block_indexation():
@@ -10,15 +11,15 @@ def test_block_indexation():
         (3, ["я", "любить", "ты", "я"]),
         (4, []),
     ]
-    result_dict = {
-        "я": [1, 3],
-        "любить": [1, 2, 3],
-        "инфопоиск": [1],
-        "ты": [2, 3],
-        "алгебра": [2],
-    }
+    result_list = [
+        ("алгебра", [2]),
+        ("инфопоиск", [1]),
+        ("любить", [1, 2, 3]),
+        ("ты", [2, 3]),
+        ("я", [1, 3]),
+    ]
     temp = index.sub_block_indexation(test_list)
-    assert temp == result_dict
+    assert temp == result_list
 
 
 def test_build_index():
@@ -37,5 +38,12 @@ def test_build_index():
         (12, ["кусать"]),
     ]
     tempdir = tempfile.gettempdir()
-    result = index.build_index(test_list, os.path.join(tempdir, "final_file.txt"), 3)
-    assert result
+    index_file = os.path.join(tempdir, "final_file.txt")
+    index.build_index(test_list, index_file, 3)
+
+    true_index = [list(t) for t in index.sub_block_indexation(test_list)]
+
+    with open(index_file) as file:
+        merged_index = [json.loads(line) for line in file][:-1]
+
+    assert merged_index == true_index
