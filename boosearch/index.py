@@ -10,7 +10,7 @@ from boosearch.tokenization import load_stopwords, preprocess_text
 
 
 def _iter_json(filename: str) -> Iterable[Any]:
-    with open(filename) as file:
+    with open(filename, encoding="utf8") as file:
         for line in file:
             yield json.loads(line)
 
