@@ -1,6 +1,7 @@
 import click
 
 from boosearch.index import index_json
+from boosearch.search import cli_search
 
 
 @click.group()
@@ -45,11 +46,13 @@ def index(data, index, target_column, buffer_size):
     required=True,
     help="Index file name",
 )
+@click.option(
+    "--results", type=click.INT, default=5, help="Index file name",
+)
 @click.argument("query", type=click.STRING)
-def search(data, index, query):
+def search(data, index, results, query):
     """Search documents"""
-
-    raise NotImplementedError
+    cli_search(query, index, data, results)
 
 
 main.add_command(index)

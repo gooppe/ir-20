@@ -2,3 +2,4 @@ pytest
 black
 pymorphy2[fast]
 ujson
+sumpy
