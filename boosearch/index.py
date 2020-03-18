@@ -4,6 +4,8 @@ from collections import defaultdict
 from itertools import islice, chain
 from typing import Tuple, List, Hashable, Iterable, Generator, IO, Any
 
+from tqdm import tqdm
+
 import ujson as json
 
 from boosearch.tokenization import load_stopwords, preprocess_text
@@ -28,11 +30,15 @@ def index_json(
     """
     stopwords = load_stopwords("ru")
 
+    with open(filename, encoding="utf8") as file:
+        total = sum(1 for line in file)
+
     data = _iter_json(filename)
     data = (
         (i, preprocess_text(tup[target_collumn], stopwords))
         for i, tup in enumerate(data)
     )
+    data = tqdm(data, desc="Building Index", total=total)
 
     build_index(data, index_name, buffer_size)
 
