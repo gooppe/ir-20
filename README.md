@@ -20,7 +20,7 @@ pip install git+https://github.com/gooppe/ir-20
 Можно запустить изолированно в контейнере:
 ```bash
 git clone https://github.com/gooppe/ir-20 && cd ir-20
-sudo docker install -t boosearch .
+sudo docker build -t boosearch .
 sudo docker run -it --rm -v /path/to/data:/workspace/data boosearch 
 ```
 
