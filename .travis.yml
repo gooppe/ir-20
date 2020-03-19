@@ -8,5 +8,5 @@ install:
   - python setup.py install
 
 script:
-  - black --check --diff boosearch tests
+  - black -l 79 --check --diff boosearch tests
   - python3 -m pytest tests -x -v
