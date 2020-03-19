@@ -17,7 +17,7 @@ def test_search_token(tmpdir):
     found_docs = search.find_term(q, index_file)
     assert found_docs == [0, 1]
 
-    q = sympify("10")
+    q = sympify("8")
     found_docs = search.find_term(q, index_file)
     assert found_docs == []
 
@@ -27,7 +27,7 @@ def test_search_token(tmpdir):
 
 
 def test_search_not_token(tmpdir):
-    docs = ["A B C D", "B C D E", "F G"]
+    docs = ["a b c d", "b c d e", "f g"]
     docs = enumerate(docs)
     doc_ids = list(range(3))
 
@@ -63,7 +63,7 @@ def test_intersect_list():
 
 
 def test_search_and_token(tmpdir):
-    docs = ["A B C D", "B C D E", "F G"]
+    docs = ["a b c d", "b c d e", "f g"]
     docs = enumerate(docs)
     doc_ids = list(range(3))
 
@@ -99,7 +99,7 @@ def test_union_list():
 
 
 def test_search_or_token(tmpdir):
-    docs = ["A B C D", "B C D E", "F G"]
+    docs = ["a b c d", "b c d e", "f g"]
     docs = enumerate(docs)
     doc_ids = list(range(3))
 
@@ -120,7 +120,7 @@ def test_search_or_token(tmpdir):
 
 
 def test_search(tmpdir):
-    docs = ["A B C D", "B C D F", "A F G"]
+    docs = ["a b c d", "b c d f", "a f g"]
     docs = enumerate(docs)
     doc_ids = list(range(3))
 

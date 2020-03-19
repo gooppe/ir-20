@@ -2,6 +2,8 @@ import re
 from itertools import chain
 from typing import Any, Hashable, Iterable, List, Union
 
+from boosearch import tokenization
+
 import ujson as json
 from sympy.core import Symbol
 from sympy.core.sympify import SympifyError, sympify
@@ -25,7 +27,7 @@ def cli_search(
 
     doc_ids = [int(line.split(",", 1)[0][1:]) for line in _iter_data_file()]
     result = search(query, index_file, doc_ids)
-    positive_terms = get_positive_terms(query)
+    positive_terms = tokenization.lemmatize(get_positive_terms(query))
     print_result(result, _iter_data_file(), positive_terms, n_results)
 
 
@@ -79,6 +81,7 @@ def search(
 
 
 def find_term(query: Symbol, index: str) -> List[Hashable]:
+    query = tokenization.lemmatize([str(query)])[0]
     with open(index) as file:
         for line in file:
             if line.startswith(f'["{query}"'):
