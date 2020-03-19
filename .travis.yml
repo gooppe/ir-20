@@ -1,0 +1,12 @@
+language: python
+python:
+  - "3.6"
+
+install:
+  - python3 -m pip install -U pip
+  - pip install -r requirements.txt
+  - python setup.py install
+
+script:
+  - black -l 79 --check --diff boosearch tests
+  - python3 -m pytest tests -x -v

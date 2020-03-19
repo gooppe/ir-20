@@ -1,2 +1,6 @@
 pytest
 black
+pymorphy2[fast]
+ujson
+sympy
+tqdm
