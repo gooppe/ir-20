@@ -71,7 +71,9 @@ def load_stopwords(lang: str) -> Set[str]:
     if not pkg_resources.is_resource(boosearch.resources.stopwords, lang_file):
         raise ValueError(f"Stopwords list `{lang}` not founded")
 
-    raw_stopwords = pkg_resources.read_text(boosearch.resources.stopwords, lang_file)
+    raw_stopwords = pkg_resources.read_text(
+        boosearch.resources.stopwords, lang_file
+    )
     stopwords = set(word.lower().strip() for word in raw_stopwords.split("\n"))
 
     return stopwords
@@ -83,7 +85,8 @@ def preprocess_text(text: str, stopwords: Optional[Set] = None) -> List[str]:
 
     Args:
         text (str): input text.
-        stopwords (Optional[Set], optional): set of stopwords. Defaults to None.
+        stopwords (Optional[Set], optional): set of stopwords.
+            Defaults to None.
 
     Returns:
         List[str]: preprocessed text.

@@ -18,7 +18,10 @@ def _iter_json(filename: str) -> Iterable[Any]:
 
 
 def index_json(
-    filename: str, index_name: str, target_collumn: int, buffer_size: int = 10000
+    filename: str,
+    index_name: str,
+    target_collumn: int,
+    buffer_size: int = 10000,
 ):
     """Start indexing json file.
 
@@ -109,9 +112,9 @@ def concatenate_data(number_of_files: int, filename: str):
 
     main_file = open(filename, "w")
 
-    buffer_docs = (
-        []
-    )  # буферные листы для термов и их doc_id которые мы не использовали на итерации
+    buffer_docs = []
+    # буферные листы для термов и их doc_id которые мы не использовали
+    # на итерации
     buffer_terms = []
     eof_list = [False] * number_of_files  # флаг концов файла
 
@@ -143,12 +146,14 @@ def concatenate_data(number_of_files: int, filename: str):
                     eof_list[i] = True
                     continue
 
-            # если же файл не прочитан, то мы загружаем его предыдущее состояние
+            # если же файл не прочитан, то мы загружаем его предыдущее
+            # состояние
             else:
                 term = buffer_terms[i]
                 docs = buffer_docs[i]
 
-            # если терм пустой, значит мы в самом начале, когда ещё ничего не было подгружено
+            # если терм пустой, значит мы в самом начале, когда ещё ничего
+            # не было подгружено
             if min_term == "":
                 min_term = term
                 min_storage.append(docs)
@@ -159,7 +164,8 @@ def concatenate_data(number_of_files: int, filename: str):
                     min_storage.append(docs)
                     min_indexes.append(i)
                 else:
-                    # если нашли терм поменьше, скидываем всё накопленное и заново строим листы
+                    # если нашли терм поменьше, скидываем всё накопленное и
+                    # заново строим листы
                     if term < min_term:
                         min_storage.clear()
                         min_indexes.clear()
@@ -172,7 +178,8 @@ def concatenate_data(number_of_files: int, filename: str):
         for i in min_indexes:
             mask[i] = True
 
-        return_docs = list_merge(min_storage)  # сливаем списки, сортируем, устраиваем
+        return_docs = list_merge(min_storage)
+        # сливаем списки, сортируем, устраиваем
         return_docs.sort()
         dump = json.dumps((min_term, return_docs), ensure_ascii=False)
         print(dump, file=main_file)

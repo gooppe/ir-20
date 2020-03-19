@@ -26,7 +26,10 @@ def main():
     help="Index of the indexed column in the json file",
 )
 @click.option(
-    "--buffer_size", type=click.INT, default=10000, help="Indexation buffer size"
+    "--buffer_size",
+    type=click.INT,
+    default=10000,
+    help="Indexation buffer size",
 )
 def index(data, index, target_column, buffer_size):
     """Build search index"""

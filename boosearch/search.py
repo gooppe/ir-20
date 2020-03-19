@@ -1,6 +1,6 @@
 import re
 from itertools import chain
-from typing import Any, Hashable, Iterable, List, Tuple, Union
+from typing import Any, Hashable, Iterable, List, Union
 
 import ujson as json
 from sympy.core import Symbol
@@ -30,7 +30,10 @@ def cli_search(
 
 
 def print_result(
-    result: List[int], docs: Iterable[str], search_terms: List[str], n_results: int,
+    result: List[int],
+    docs: Iterable[str],
+    search_terms: List[str],
+    n_results: int,
 ):
     def filter_docs(docs, result):
         try:
@@ -51,7 +54,10 @@ def print_result(
 
         for term in search_terms:
             text = re.sub(
-                f"{term}", f"{bcolors.BOLD}{term}{bcolors.ENDC}", text, flags=re.I
+                f"{term}",
+                f"{bcolors.BOLD}{term}{bcolors.ENDC}",
+                text,
+                flags=re.I,
             )
 
         print(f"{i}: {bcolors.HEADER}{bcolors.BOLD}{title}{bcolors.ENDC}")
