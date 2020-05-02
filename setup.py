@@ -13,6 +13,7 @@ setup(
         "ujson",
         "sympy",
         "tqdm",
+        "transformers",
     ],
     entry_points={"console_scripts": ["boos = boosearch.cli:main"]},
     zip_safe=True,
