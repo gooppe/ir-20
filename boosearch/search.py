@@ -1,19 +1,19 @@
+import os
 import re
 from itertools import chain
 from typing import Any, Hashable, Iterable, List, Union
 
-from boosearch import tokenization
-
 import ujson as json
+from boosearch import tokenization
+from boosearch.utils import bcolors
+from boosearch.embeddings import most_common
 from sympy.core import Symbol
 from sympy.core.sympify import SympifyError, sympify
 from sympy.logic.boolalg import And, BooleanFunction, Not, Or, to_dnf
 
-from boosearch.utils import bcolors
-
 
 def cli_search(
-    query: str, index_file: str, data_file: str, n_results: int = 10,
+    query: str, dump_dir: str, data_file: str, n_results: int = 10,
 ):
     def _iter_data_file():
         with open(data_file) as file:
@@ -25,10 +25,24 @@ def cli_search(
         print("Invalid query")
         return
 
+    index_file = os.path.join(dump_dir, "index.txt")
+    embeddings_file = os.path.join(dump_dir, "embeddings.pth")
+
     doc_ids = [int(line.split(",", 1)[0][1:]) for line in _iter_data_file()]
     result = search(query, index_file, doc_ids)
-    positive_terms = tokenization.lemmatize(get_positive_terms(query))
-    print_result(result, _iter_data_file(), positive_terms, n_results)
+
+    positive_terms = get_positive_terms(query)
+    positive_query = " ".join(positive_terms)
+    rescored_result = most_common(
+        positive_query, result, n_results, embeddings_file
+    )
+
+    print_result(
+        rescored_result,
+        _iter_data_file(),
+        tokenization.lemmatize(positive_terms),
+        n_results,
+    )
 
 
 def print_result(
@@ -38,21 +52,19 @@ def print_result(
     n_results: int,
 ):
     def filter_docs(docs, result):
-        try:
-            result = iter(result)
-            r = next(result)
-            for doc in docs:
-                if doc.startswith(f"[{r},"):
-                    yield json.loads(doc)
-                    r = next(result)
-        except StopIteration:
-            pass
+        selected_docs = dict()
+        for doc in docs:
+            doc_index = int(doc.split(",", 1)[0][1:])
+            if doc_index in result:
+                selected_docs[doc_index] = json.loads(doc)
 
-    print(f"Founded {len(result)} documents:")
+        return selected_docs
+
     result = result[:n_results]
+    selected_docs = filter_docs(docs, result)
 
-    for i, doc in enumerate(filter_docs(docs, result), 1):
-        index, link, title, text, *_ = doc
+    for i, doc_id in enumerate(result, 1):
+        index, link, title, text, *_ = selected_docs[doc_id]
 
         for term in search_terms:
             text = re.sub(
