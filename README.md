@@ -39,7 +39,7 @@ boos search --data news.json --dump index/ "(my | his) & query"
 
 Для полнотекстового поиска
 ```
-boos textsearch --suggestion --data news.json --dump /index "this is my query!"
+boos textsearch --suggestion --data news.json --dump index/ "this is my query"
 ```
 
 Флаг `--suggestion` дополняет поисковой запрос (работает только в полнотекстовом поиске).
@@ -51,6 +51,6 @@ boos textsearch --suggestion --data news.json --dump /index "this is my query!"
 Скачиваем данные из пре-релиза и распаковываем
 
 ```bash
-curl -LJO https://github.com/gooppe/ir-20/releases/download/v0.0.1-data/news.json.tgz
-tar -zxvf news.json.tgz
+curl -LJO https://github.com/gooppe/ir-20/releases/download/v0.0.2-data/data.tar.gz
+tar -zxvf data.tar.gz
 ```
