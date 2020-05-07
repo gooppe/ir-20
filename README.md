@@ -29,14 +29,20 @@ sudo docker run -it --rm -v /path/to/data:/workspace/data boosearch
 Для построения индекса
 
 ```bash
-boos index --data news.json --index index.json
+boos index --data news.json --dump index/
 ```
 
 Для поиска
 ```
-boos search --data news.json --index index.json "машины & самолеты & ~(самокаты|мотоциклы)"
+boos search --data news.json --dump index/ "(my | his) & query"
 ```
 
+Для полнотекстового поиска
+```
+boos textsearch --suggestion --data news.json --dump index/ "this is my query"
+```
+
+Флаг `--suggestion` дополняет поисковой запрос (работает только в полнотекстовом поиске).
 Для всех команд работает флаг `--help`, показывающий дополнительные параметры (размер буфера, число выводимых результатов, etc.)
 
 
@@ -45,6 +51,6 @@ boos search --data news.json --index index.json "машины & самолеты
 Скачиваем данные из пре-релиза и распаковываем
 
 ```bash
-curl -LJO https://github.com/gooppe/ir-20/releases/download/v0.0.1-data/news.json.tgz
-tar -zxvf news.json.tgz
+curl -LJO https://github.com/gooppe/ir-20/releases/download/v0.0.2-data/data.tar.gz
+tar -zxvf data.tar.gz
 ```

@@ -1,20 +1,13 @@
 import os
 import tempfile
 from collections import defaultdict
-from itertools import islice, chain
-from typing import Tuple, List, Hashable, Iterable, Generator, IO, Any
-
-from tqdm import tqdm
+from itertools import chain, islice
+from typing import IO, Any, Generator, Hashable, Iterable, List, Tuple
 
 import ujson as json
-
 from boosearch.tokenization import load_stopwords, preprocess_text
-
-
-def _iter_json(filename: str) -> Iterable[Any]:
-    with open(filename, encoding="utf8") as file:
-        for line in file:
-            yield json.loads(line)
+from boosearch.utils import iter_json
+from tqdm import tqdm
 
 
 def index_json(
@@ -36,7 +29,7 @@ def index_json(
     with open(filename, encoding="utf8") as file:
         total = sum(1 for line in file)
 
-    data = _iter_json(filename)
+    data = iter_json(filename)
     data = (
         (i, preprocess_text(tup[target_collumn], stopwords))
         for i, tup in enumerate(data)

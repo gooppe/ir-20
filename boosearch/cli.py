@@ -1,7 +1,9 @@
-import click
+import os
 
+import click
+from boosearch.embeddings import export_embeddings_json
 from boosearch.index import index_json
-from boosearch.search import cli_search
+from boosearch.search import cli_search, cli_text_search
 
 
 @click.group()
@@ -17,7 +19,10 @@ def main():
     help="Input file name",
 )
 @click.option(
-    "--index", type=click.Path(), required=True, help="Output index file name"
+    "--dump",
+    type=click.Path(),
+    required=True,
+    help="Output dump indexation folder",
 )
 @click.option(
     "--target_column",
@@ -31,9 +36,15 @@ def main():
     default=10000,
     help="Indexation buffer size",
 )
-def index(data, index, target_column, buffer_size):
+def index(data, dump, target_column, buffer_size):
     """Build search index"""
-    index_json(data, index, target_column, buffer_size)
+    os.makedirs(dump, exist_ok=True)
+
+    index_filename = os.path.join(dump, "index.txt")
+    index_json(data, index_filename, target_column, buffer_size)
+
+    embeddings_filename = os.path.join(dump, "embeddings.pth")
+    export_embeddings_json(data, embeddings_filename, target_column)
 
 
 @click.command()
@@ -44,19 +55,45 @@ def index(data, index, target_column, buffer_size):
     help="Data file name",
 )
 @click.option(
-    "--index",
+    "--dump",
     type=click.Path(exists=True, file_okay=True),
     required=True,
-    help="Index file name",
+    help="Indexation dump folder",
 )
 @click.option(
-    "--results", type=click.INT, default=5, help="Index file name",
+    "--results", type=click.INT, default=5, help="Number of search results",
 )
 @click.argument("query", type=click.STRING)
-def search(data, index, results, query):
+def search(data, dump, results, query):
     """Search documents"""
-    cli_search(query, index, data, results)
+    cli_search(query, dump, data, results)
+
+
+@click.command()
+@click.option(
+    "--data",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Data file name",
+)
+@click.option(
+    "--dump",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Indexation dump folder",
+)
+@click.option(
+    "--results", type=click.INT, default=5, help="Number of search results",
+)
+@click.option(
+    "--suggestion", is_flag=True, help="Auto suggest query",
+)
+@click.argument("query", type=click.STRING)
+def textsearch(data, dump, results, query, suggestion):
+    """Full-text search"""
+    cli_text_search(query, dump, data, results, suggestion)
 
 
 main.add_command(index)
 main.add_command(search)
+main.add_command(textsearch)
