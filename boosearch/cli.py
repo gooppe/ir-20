@@ -3,7 +3,7 @@ import os
 import click
 from boosearch.embeddings import export_embeddings_json
 from boosearch.index import index_json
-from boosearch.search import cli_search
+from boosearch.search import cli_search, cli_text_search
 
 
 @click.group()
@@ -69,5 +69,31 @@ def search(data, dump, results, query):
     cli_search(query, dump, data, results)
 
 
+@click.command()
+@click.option(
+    "--data",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Data file name",
+)
+@click.option(
+    "--dump",
+    type=click.Path(exists=True, file_okay=True),
+    required=True,
+    help="Indexation dump folder",
+)
+@click.option(
+    "--results", type=click.INT, default=5, help="Number of search results",
+)
+@click.option(
+    "--suggestion", is_flag=True, help="Auto suggest query",
+)
+@click.argument("query", type=click.STRING)
+def textsearch(data, dump, results, query, suggestion):
+    """Full-text search"""
+    cli_text_search(query, dump, data, results, suggestion)
+
+
 main.add_command(index)
 main.add_command(search)
+main.add_command(textsearch)

@@ -7,6 +7,8 @@ import ujson as json
 from boosearch import tokenization
 from boosearch.utils import bcolors
 from boosearch.embeddings import most_common
+from boosearch.suggestion import sample_text
+from sympy import symbols
 from sympy.core import Symbol
 from sympy.core.sympify import SympifyError, sympify
 from sympy.logic.boolalg import And, BooleanFunction, Not, Or, to_dnf
@@ -43,6 +45,22 @@ def cli_search(
         tokenization.lemmatize(positive_terms),
         n_results,
     )
+
+
+def cli_text_search(
+    text: str,
+    dump_dir: str,
+    data_file: str,
+    n_results: int = 10,
+    suggestion: bool = True,
+):
+    if suggestion:
+        text = sample_text(text)
+        print(f"Auto suggestion: {text}")
+
+    tokens = re.split(r"\W+", text.strip())
+    query = Or(*symbols(",".join(tokens)))
+    cli_search(query, dump_dir, data_file, n_results)
 
 
 def print_result(
