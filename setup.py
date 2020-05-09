@@ -14,7 +14,7 @@ setup(
         "sympy",
         "tqdm",
         "transformers",
-        "torch"
+        "torch",
     ],
     entry_points={"console_scripts": ["boos = boosearch.cli:main"]},
     zip_safe=True,

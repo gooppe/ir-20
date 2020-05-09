@@ -52,9 +52,7 @@ def most_common(
     encoded_tensor = torch.tensor([tokenizer.encode(query, max_length=512)])
     query_embedding = model(encoded_tensor)[0].sum(dim=1)
     simmmilarity = torch.cosine_similarity(query_embedding, doc_embeddings)
-    _, top_idxs = torch.topk(
-        simmmilarity, k=min(n, len(doc_indexes))
-    )
+    _, top_idxs = torch.topk(simmmilarity, k=min(n, len(doc_indexes)))
     rescored_doc_indexes = [doc_indexes[i] for i in top_idxs]
 
     return rescored_doc_indexes

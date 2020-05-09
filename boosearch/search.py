@@ -15,7 +15,11 @@ from sympy.logic.boolalg import And, BooleanFunction, Not, Or, to_dnf
 
 
 def cli_search(
-    query: str, dump_dir: str, data_file: str, n_results: int = 10, text: str = None,
+    query: str,
+    dump_dir: str,
+    data_file: str,
+    n_results: int = 10,
+    text: str = None,
 ):
     def _iter_data_file():
         with open(data_file) as file:
@@ -35,9 +39,7 @@ def cli_search(
 
     positive_terms = get_positive_terms(query)
     text = " ".join(positive_terms) if text is None else text
-    rescored_result = most_common(
-        text, result, n_results, embeddings_file
-    )
+    rescored_result = most_common(text, result, n_results, embeddings_file)
 
     print_result(
         rescored_result,
@@ -60,7 +62,9 @@ def cli_text_search(
         print(f"Auto suggestion: {text}")
 
     stopwords = tokenization.load_stopwords(lang)
-    tokens = [t for t in re.split(r"\W+", text.lower().strip()) if t not in stopwords]
+    tokens = [
+        t for t in re.split(r"\W+", text.lower().strip()) if t not in stopwords
+    ]
     if len(tokens) > 1:
         query = Or(*symbols(",".join(tokens)))
     else:
