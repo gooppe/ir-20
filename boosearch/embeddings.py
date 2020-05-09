@@ -49,11 +49,11 @@ def most_common(
     embeddings = torch.load(emb_dump, map_location="cpu")
     doc_embeddings = embeddings[doc_indexes]
 
-    encoded_tensor = torch.tensor([tokenizer.encode(query)[:511]])
+    encoded_tensor = torch.tensor([tokenizer.encode(query, max_length=512)])
     query_embedding = model(encoded_tensor)[0].sum(dim=1)
     simmmilarity = torch.cosine_similarity(query_embedding, doc_embeddings)
     _, top_idxs = torch.topk(
-        simmmilarity, k=min(n, len(doc_indexes)), largest=False
+        simmmilarity, k=min(n, len(doc_indexes))
     )
     rescored_doc_indexes = [doc_indexes[i] for i in top_idxs]
 
