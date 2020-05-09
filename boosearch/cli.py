@@ -36,7 +36,10 @@ def main():
     default=10000,
     help="Indexation buffer size",
 )
-def index(data, dump, target_column, buffer_size):
+@click.option(
+    "--lang", type=click.STRING, default="en", help="Corpus language",
+)
+def index(data, dump, target_column, buffer_size, lang):
     """Build search index"""
     os.makedirs(dump, exist_ok=True)
 
@@ -89,9 +92,12 @@ def search(data, dump, results, query):
     "--suggestion", is_flag=True, help="Auto suggest query",
 )
 @click.argument("query", type=click.STRING)
-def textsearch(data, dump, results, query, suggestion):
+@click.option(
+    "--lang", type=click.STRING, default="en", help="Corpus language",
+)
+def textsearch(data, dump, results, query, suggestion, lang):
     """Full-text search"""
-    cli_text_search(query, dump, data, results, suggestion)
+    cli_text_search(query, dump, data, results, suggestion, lang)
 
 
 main.add_command(index)

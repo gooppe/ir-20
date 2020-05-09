@@ -53,13 +53,18 @@ def cli_text_search(
     data_file: str,
     n_results: int = 10,
     suggestion: bool = True,
+    lang: str = "en",
 ):
     if suggestion:
         text = sample_text(text)
         print(f"Auto suggestion: {text}")
 
-    tokens = re.split(r"\W+", text.strip())
-    query = Or(*symbols(",".join(tokens)))
+    stopwords = tokenization.load_stopwords(lang)
+    tokens = [t for t in re.split(r"\W+", text.strip()) if t not in stopwords]
+    if len(tokens) > 1:
+        query = Or(*symbols(",".join(tokens)))
+    else:
+        query = Symbol(tokens[0])
     cli_search(query, dump_dir, data_file, n_results)
 
 

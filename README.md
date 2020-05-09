@@ -51,6 +51,6 @@ boos textsearch --suggestion --data news.json --dump index/ "this is my query"
 Скачиваем данные из пре-релиза и распаковываем
 
 ```bash
-curl -LJO https://github.com/gooppe/ir-20/releases/download/v0.0.2-data/data.tar.gz
+curl -LJO https://github.com/gooppe/ir-20/releases/download/v0.0.3-data/data.tar.gz
 tar -zxvf data.tar.gz
 ```

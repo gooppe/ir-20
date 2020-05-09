@@ -15,6 +15,7 @@ def index_json(
     index_name: str,
     target_collumn: int,
     buffer_size: int = 10000,
+    lang: str = "en",
 ):
     """Start indexing json file.
 
@@ -24,7 +25,7 @@ def index_json(
         target_collumn (int): index of the processed column of json.
         buffer_size (int, optional): default buffer size. Defaults to 10000.
     """
-    stopwords = load_stopwords("ru")
+    stopwords = load_stopwords(lang)
 
     with open(filename, encoding="utf8") as file:
         total = sum(1 for line in file)
